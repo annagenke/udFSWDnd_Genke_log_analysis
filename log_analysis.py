@@ -20,14 +20,14 @@ queries = [
             LEFT JOIN articles ON authors.id=articles.author
             LEFT JOIN log ON '/article/' || articles.slug = log.path
                 GROUP BY authors.name
-                ORDER BY count DESC;
+                ORDER BY views DESC;
         """,
      },
-    {"title": "On which days did more than 1% of requests lead to errors?",
+    {"title": "On which days did more than 1% of requests lead to errors? (%)",
      "query":
          """
         SELECT *
-        FROM  (SELECT T1.date,
+        FROM  (SELECT to_char(T1.date, 'FMMonth DDth, YYYY'),
                       Round
                       (Cast(Cast(error AS FLOAT) / Cast(total AS FLOAT) * 100
                       AS
@@ -48,11 +48,29 @@ queries = [
       """
      }
 ]
+
+
 def main():
-    db_conn_str = "dbname = \"news\""
+    db_conn_str = "dbname = news"
+    try:
+        conn = psycopg2.connect(db_conn_str)
+    except:
+        print("failed to connect")
+        exit(1)
+    cur = conn.cursor()
 
-    conn = psycopg2.connect("dbname=news")
+    for q in queries:
+        print(q["title"])
+        cur.execute(q["query"])
+        if cur.rowcount > 0:
+            results = cur.fetchall()
+            for line in results:
+                print("\t" + str(line[0]) + " - " + str(line[1]))
+            print("\n")
+        else:
+            print("\tno results\n")
 
+    conn.close()
 
 
 if __name__ == "__main__":
