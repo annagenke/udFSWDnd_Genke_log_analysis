@@ -1,18 +1,18 @@
 # Project 3 Log Analysis
 This is the repository for the Log Analysis Project.
 
-##Before Running
+## Before Running
 In order to run this project you must have the news postgreSQL database set up on the Vagrant VM.
 Instructions for setting up the VM and PostgreSQL DB can be found in lessons for this unit.
 You must save the log_analysis.py file in the shared folder for Vagrant
 
-###Running
+### Running
 In order to  run the log analysis program, save the python file log_analysis.py 
 in the directory shared with the Vagrant VM. 
 From this directory run the command
 `/path/to/python log_analysis.py`
 
-##Output
+## Output
 Following the above directions will result in output that looks like the following
  (actual results will depend on data):
 ```commandline
