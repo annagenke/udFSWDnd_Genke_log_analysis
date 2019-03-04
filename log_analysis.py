@@ -1,21 +1,23 @@
+#!/usr/bin/env python3
+
 import psycopg2
 
 queries = [
-    {"title": "What are the most popular three articles of all time?",
+    {"title": "What are the most popular three articles of all time? (by views)",
      "query":
          """
-        SELECT title, count(*)
+        SELECT title, count(*)||' views' as views
         FROM articles
             LEFT JOIN log ON '/article/' || articles.slug = log.path
                 GROUP BY title
-                ORDER BY count DESC
+                ORDER BY views DESC
                 LIMIT 3;
         """
      },
-    {"title": "Who are the most popular article authors of all time?",
+    {"title": "Who are the most popular article authors of all time? (by views)",
      "query":
          """
-        SELECT name AS author, count(*) AS views
+        SELECT name AS author, count(*)||' views' AS views
         FROM authors
             LEFT JOIN articles ON authors.id=articles.author
             LEFT JOIN log ON '/article/' || articles.slug = log.path
@@ -54,9 +56,9 @@ def main():
     db_conn_str = "dbname = news"
     try:
         conn = psycopg2.connect(db_conn_str)
-    except:
-        print("failed to connect")
-        exit(1)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        exit(0)
     cur = conn.cursor()
 
     for q in queries:
