@@ -6,7 +6,7 @@ queries = [
     {"title": "What are the most popular three articles of all time? (by views)",
      "query":
          """
-        SELECT title, count(*)||' views' as views
+        SELECT title, count(*) as views
         FROM articles
             LEFT JOIN log ON '/article/' || articles.slug = log.path
                 GROUP BY title
@@ -17,7 +17,7 @@ queries = [
     {"title": "Who are the most popular article authors of all time? (by views)",
      "query":
          """
-        SELECT name AS author, count(*)||' views' AS views
+        SELECT name AS author, count(*) AS views
         FROM authors
             LEFT JOIN articles ON authors.id=articles.author
             LEFT JOIN log ON '/article/' || articles.slug = log.path
